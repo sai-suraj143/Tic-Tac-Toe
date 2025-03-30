@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>X-O-X</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-image: url("https://i0.wp.com/picjumbo.com/wp-content/uploads/colorful-love-hearts-wallpaper-free-image.jpg?w=2210&quality=70");
+        margin: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        background-blend-mode: darken;
+      }
+
+      .board {
+        display: grid;
+        grid-template-columns: repeat(3, 100px);
+        grid-template-rows: repeat(3, 100px);
+        gap: 5px;
+        border: 5px solid #f7cad0;
+        border-radius: 10px;
+        padding: 5px;
+        background-color: #3c096c;
+      }
+      #heading {
+        position: absolute;
+        top: 3%;
+        color: #fff;
+        font-size: large;
+        font-family: sans-serif;
+      }
+      #statusText {
+        position: absolute;
+        top: 13%;
+        color: #fff;
+        height: max-content;
+        width: max-content;
+        font-size: 50px;
+        font-family: sans-serif;
+      }
+
+      .cell {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        background-color: #a74482;
+        color: #fff;
+        font-size: xx-large;
+        border-radius: 10px;
+        border: 2px solid transparent;
+      }
+
+      .cell:hover {
+        border: 5px solid #f7cad0;
+        cursor: pointer;
+      }
+      #restart-btn {
+        position: absolute;
+        bottom: 20%;
+        padding: 10px;
+        border-radius: 20%;
+        color: #fff;
+        background-color: #3c096c;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="heading">Tic-Tac-Toe</h1>
+    <div id="statusText">X's turn</div>
+    <div class="board">
+      <div class="cell" data-index="0"></div>
+      <div class="cell" data-index="1"></div>
+      <div class="cell" data-index="2"></div>
+      <div class="cell" data-index="3"></div>
+      <div class="cell" data-index="4"></div>
+      <div class="cell" data-index="5"></div>
+      <div class="cell" data-index="6"></div>
+      <div class="cell" data-index="7"></div>
+      <div class="cell" data-index="8"></div>
+    </div>
+    <button id="restart-btn">restart</button>
+    <script>
+      const cells = document.querySelectorAll(".cell");
+      const restartBtn = document.querySelector("#restart-btn");
+      const statusText = document.querySelector("#statusText");
+      const winingPatterns = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+      ];
+      let options = ["", "", "", "", "", "", "", "", ""];
+      let currentPlayer = "X";
+      let running = false;
+      initializeGame();
+
+      function initializeGame() {
+        cells.forEach((cell) => cell.addEventListener("click", cellClicked));
+        restartBtn.addEventListener("click", restartGame);
+        statusText.textContent = "Start the Game";
+        running = true;
+      }
+      function cellClicked() {
+        const cellIndex = this.getAttribute("data-index");
+        if (options[cellIndex] !== "" || !running) return;
+        updateCell(this, cellIndex);
+        checkWinner();
+      }
+      function updateCell(cell, index) {
+        options[index] = currentPlayer;
+        cell.textContent = currentPlayer;
+      }
+      function changePlayer() {
+        currentPlayer = currentPlayer === "X" ? "O" : "X";
+        statusText.textContent = `Now yours turn ${currentPlayer}`;
+      }
+      function checkWinner() {
+        let roundWon = false;
+
+        for (let condition of winingPatterns) {
+          const [a, b, c] = condition;
+          if (
+            options[a] &&
+            options[a] === options[b] &&
+            options[a] === options[c]
+          ) {
+            roundWon = true;
+            break;
+          }
+        }
+        if (roundWon) {
+          statusText.textContent = `${currentPlayer} Is the winner of the game `;
+          setTimeout(() => {
+            cells.forEach((cell) => (cell.textContent = ""));
+            statusText.textContent = "Start the Game";
+          }, 4000);
+        } else if (!options.includes("")) {
+          statusText.textContent = "Match draw";
+        } else {
+          changePlayer();
+        }
+      }
+      function restartGame() {
+        options = ["", "", "", "", "", "", "", "", ""];
+        currentPlayer = "X";
+        cells.forEach((cell) => (cell.textContent = ""));
+        running = true;
+        statusText.textContent = "Start the game";
+      }
+    </script>
+  </body>
+</html>
