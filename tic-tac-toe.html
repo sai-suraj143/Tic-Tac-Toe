@@ -66,6 +66,27 @@
         background-color: #3c096c;
         cursor: pointer;
       }
+
+      @media (max-width: 425px) {
+        body {
+          flex-direction: column;
+          padding: 10px;
+        }
+        .board {
+          grid-template-columns: repeat(3, 100px);
+          grid-template-rows: repeat(3, 100px);
+        }
+        .cell {
+          font-size: large;
+        }
+        #statusText {
+          font-size: 30px;
+        }
+        #restart-btn {
+          bottom: 5%;
+          padding: 8px;
+        }
+      }
     </style>
   </head>
   <body>
